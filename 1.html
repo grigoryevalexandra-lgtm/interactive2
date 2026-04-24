@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>South Park Engineer: Blink & Wave</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+        :root {
+            --premium-gold: #D4AF37; /* Ваш фирменный золотой */
+        }
+        body { margin: 0; padding: 0; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif;}
+        
+        .scene {
+            position: relative;
+            width: 1920px; height: 1080px; /* Размер холста Canva */
+            border: 5px solid var(--premium-gold);
+            transform: scale(0.6); 
+            transform-origin: center top;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+
+        .layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-size: 100% 100%; 
+            background-repeat: no-repeat;
+            background-position: 0 0;
+        }
+
+        /* ----- ФОН И ТЕЛО (z-index: 1): Всё, что в 96.png, включая замазанного человека --- */
+        #bg    { background-image: url('94.png'); z-index: 1; opacity: 0.9; } /* Зимний пейзаж */
+
+        /* ----- ПЕРСОНАЖ (Z-index выше локации) ----- */
+        /* --- ПЕРСОНАЖ: СЛОИ --- */
+        #body  { background-image: url('85.png'); z-index: 3; } /* Туловище (поверх рук) */
+        #head  { background-image: url('88.png'); z-index: 4; } /* Голова (без лица) */
+        #mouth { background-image: url('93.png'); z-index: 5; } /* Улыбка */
+        #eyes-o { background-image: url('90.png'); z-index: 6; } /* Открытые глаза */
+        
+        /* КЛЮЧЕВОЙ ФИКС: МОРГАНИЕ */
+        /* Слой ОТКРЫТЫХ глаз (86) сидит ниже */
+        /* Слой ЗАКРЫТЫХ глаз (87) сидит выше и стартует с opacity: 0 (скрыт) */
+        #blink { background-image: url('89.png'); z-index: 7; opacity: 0; } /* Закрытые веки */
+
+        /* РУКИ (Z-index: 2, ЗА туловищем) */
+        #arm-l { background-image: url('91.png'); z-index: 2; transform-origin: 47% 40%; } /* adjust coordinates based on visual */
+        #arm-r { background-image: url('92.png'); z-index: 2; transform-origin: 53% 40%; }
+
+    </style>
+</head>
+<body>
+
+<div class="scene">
+    <div id="bg" class="layer"></div>
+    <div id="arm-l" class="layer"></div>
+    <div id="arm-r" class="layer"></div>
+    <div id="body" class="layer"></div>
+    <div id="head" class="layer"></div>
+    <div id="mouth" class="layer"></div>
+    <div id="eyes-o" class="layer"></div>
+    <div id="blink" class="layer"></div>
+</div>
+
+<script>
+    window.onload = () => {
+        // 1. Анимация Мягкого "Idle": Плавное дыхание частей лица
+        // Мы не двигаем тело (файл 96), только наложенные детали
+        const animatedParts = ["#arm-l", "#arm-r", "#body", "#head", "#mouth", "#eyes-o", "#blink"];
+        gsap.to(animatedParts, {
+            y: -15, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut"
+        });
+
+        // 2. Анимация МОРГАНИЯ (Fix)
+        function standardBlink() {
+            // Быстро показываем закрытые веки (файл 87) и сразу скрываем обратно
+            gsap.to("#blink", { opacity: 1, duration: 0.05, yoyo: true, repeat: 1, ease: "none", onComplete: function() {
+                // Ждём случайное время от 2 до 5 секунд перед следующим морганием
+                gsap.delayedCall(gsap.utils.random(2, 5), standardBlink);
+            }});
+        }
+        standardBlink(); // Запустить цикл моргания
+
+        // 3. Анимация МАХАНИЯ РУКАМИ
+        // South Park janky wave: используем yoyo и Steps для резкости
+        gsap.to("#arm-l", { rotation: 10, duration: 0.5, repeat: -1, yoyo: true, ease: "steps(3)" }); // steppy for style
+        gsap.to("#arm-r", { rotation: -10, duration: 0.5, repeat: -1, yoyo: true, ease: "steps(3)" });
+    };
+</script>
+
+</body>
+</html>
