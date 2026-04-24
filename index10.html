@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Инженер Витя: Мгновенный финал ВИШ</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+        body { 
+            margin: 0; padding: 0; overflow: hidden; 
+            background-color: #fff; 
+            display: flex; justify-content: center; align-items: center; 
+            width: 100vw; height: 100vh; font-family: 'Segoe UI', Arial, sans-serif; 
+        }
+        
+        /* БЕЛЫЙ СТАРТОВЫЙ ЭКРАН */
+        #overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #fff; 
+            z-index: 10000; display: flex; justify-content: center; align-items: center; 
+        }
+        #start-btn { 
+            padding: 30px 60px; font-size: 32px; font-weight: bold; 
+            background: #D4AF37; color: white; border: none; border-radius: 20px; 
+            cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+        }
+
+        .canvas { 
+            position: relative; width: 1920px; height: 1080px; 
+            background: #fff; transform-origin: center center; flex-shrink: 0; overflow: hidden; 
+        }
+        .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: 100% 100%; background-repeat: no-repeat; pointer-events: none; }
+
+        /* СЛОИ ПЕРСОНАЖА */
+        #sun { background-image: url('93.png'); z-index: 2; width: 350px; height: 350px; left: 50px; top: 50px; background-size: contain; }
+        #char { background-image: url('96.png'); z-index: 4; }
+        #final-scene { background-image: url('102.png'); z-index: 5; display: none; }
+        
+        #eyes_n { background-image: url('97.png'); z-index: 10; }
+        #eyes_s { background-image: url('99.png'); z-index: 11; display: none; }
+        #mouth_l { background-image: url('101.png'); z-index: 12; }
+        #mouth_o { background-image: url('98.png'); z-index: 13; display: none; }
+        #mouth_s { background-image: url('100.png'); z-index: 14; display: none; }
+        #mouth_h { background-image: url('103.png'); z-index: 15; display: none; }
+
+        /* ИНТЕРФЕЙС БЕЗ ЭФФЕКТОВ */
+        #quiz-container {
+            position: absolute; top: 250px; left: 450px; width: 750px; padding: 50px;
+            background: rgba(255, 255, 255, 0.98); border-radius: 40px;
+            border: 6px solid #D4AF37; z-index: 100; display: none; flex-direction: column; gap: 25px;
+            pointer-events: all; box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+
+        .question-text { font-size: 40px; font-weight: bold; color: #222; margin-bottom: 25px; line-height: 1.3; }
+        .answer-btn { padding: 30px; font-size: 30px; border: 2px solid #ddd; border-radius: 20px; background: #fff; cursor: pointer; text-align: left; color: #444; }
+        .answer-btn:hover { background: #fdfbf7; border-color: #D4AF37; color: #000; }
+
+        #retry-btn {
+            position: absolute; top: 750px; left: 720px; width: 480px; padding: 25px;
+            background: #D4AF37; color: white; border: none; border-radius: 15px;
+            font-size: 30px; font-weight: bold; cursor: pointer; display: none; z-index: 101;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay"><button id="start-btn" onclick="initApp()">ЗАПУСТИТЬ ТРЕНАЖЁР</button></div>
+
+    <audio id="ambient" src="office_ambient.mp3" loop></audio>
+    <audio id="voice" src="replica1.wav"></audio>
+    <audio id="voice-final" src="replica2.wav"></audio>
+    <audio id="snd-pop" src="pop_appear.mp3"></audio>
+    <audio id="snd-hover" src="tick.mp3"></audio>
+    <audio id="snd-success" src="apple_pay.mp3"></audio>
+    <audio id="snd-fail" src="error_fail.mp3"></audio>
+
+    <div class="canvas">
+        <div id="sun" class="layer"></div>
+        <div id="char" class="layer"></div>
+        <div id="final-scene" class="layer"></div>
+        <div id="eyes_n" class="layer"></div>
+        <div id="eyes_s" class="layer"></div>
+        <div id="mouth_l" class="layer"></div>
+        <div id="mouth_o" class="layer"></div>
+        <div id="mouth_s" class="layer"></div>
+        <div id="mouth_h" class="layer"></div>
+
+        <div id="quiz-container">
+            <div class="question-text">Что нужно сделать Вите в первую очередь, чтобы попасть в офис?</div>
+            <button class="answer-btn" onmouseenter="playHover()" onclick="handleAnswer(false)">- приказать охраннику, чтобы пропустил</button>
+            <button class="answer-btn" onmouseenter="playHover()" onclick="handleAnswer(true)">- подойти на ресепшн и получить временный пропуск</button>
+        </div>
+        <button id="retry-btn" onclick="resetQuiz()">Попробовать ещё раз</button>
+    </div>
+
+<script>
+    const audio = document.getElementById('voice');
+    const finalAudio = document.getElementById('voice-final');
+    const ambient = document.getElementById('ambient');
+    const sndPop = document.getElementById('snd-pop');
+    const sndHover = document.getElementById('snd-hover');
+    const sndSuccess = document.getElementById('snd-success');
+    const sndFail = document.getElementById('snd-fail');
+    
+    let isFrozen = false;
+    let isFinalSpeech = false;
+
+    const speechMap = [{start:0.1, end:0.8, speed:0.15}, {start:1.1, end:2.8, speed:0.20}, {start:3.1, end:4.8, speed:0.18}, {start:5.1, end:7.5, speed:0.14}];
+    const finalSpeechMap = [{start:0.2, end:1.2, speed:0.22}, {start:1.8, end:4.5, speed:0.18}];
+
+    function initApp() {
+        document.getElementById('overlay').style.display = 'none';
+        ambient.volume = 0.35;
+        ambient.play();
+        gsap.to("#sun", { x: 40, y: 30, scale: 1.1, duration: 5, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        audio.play();
+        syncMouth();
+        audio.onended = showQuiz;
+    }
+
+    function playHover() { sndHover.currentTime = 0; sndHover.play(); }
+
+    function syncMouth() {
+        const curA = isFinalSpeech ? finalAudio : audio;
+        const curM = isFinalSpeech ? finalSpeechMap : speechMap;
+        const openId = isFinalSpeech ? 'mouth_h' : 'mouth_o';
+
+        if (isFrozen || curA.paused || curA.ended) { resetMouth(); return; }
+
+        const phase = curM.find(p => curA.currentTime >= p.start && curA.currentTime <= p.end);
+        if (phase) {
+            gsap.timeline({ onComplete: () => setTimeout(syncMouth, 10) })
+                .set("#mouth_l", { display: "none" })
+                .set(document.getElementById(openId), { display: "block" })
+                .set("#mouth_l", { display: "block" }, "+=" + phase.speed)
+                .set(document.getElementById(openId), { display: "none" }, "<");
+        } else {
+            resetMouth();
+            setTimeout(syncMouth, 50); 
+        }
+    }
+
+    function resetMouth() {
+        document.getElementById('mouth_l').style.display = "block";
+        document.getElementById('mouth_o').style.display = "none";
+        document.getElementById('mouth_h').style.display = "none";
+    }
+
+    function showQuiz() {
+        sndPop.play();
+        document.getElementById('quiz-container').style.display = "flex";
+    }
+
+    function handleAnswer(isCorrect) {
+        // Мгновенно убираем вопрос
+        document.getElementById('quiz-container').style.display = "none";
+
+        if (isCorrect) {
+            sndSuccess.play();
+            
+            // МГНОВЕННО скрываем первую сцену
+            ['char', 'eyes_s', 'mouth_o', 'mouth_s'].forEach(id => document.getElementById(id).style.display = "none");
+
+            // МГНОВЕННО показываем всю финальную локацию (102, глаза 97, рот 101)
+            document.getElementById('final-scene').style.display = "block";
+            document.getElementById('eyes_n').style.display = "block";
+            document.getElementById('mouth_l').style.display = "block";
+
+            // МГНОВЕННО запускаем речь
+            isFrozen = false;
+            isFinalSpeech = true;
+            finalAudio.play();
+            syncMouth();
+
+        } else {
+            isFrozen = true;
+            sndFail.play(); 
+            document.getElementById('eyes_n').style.display = "none";
+            document.getElementById('eyes_s').style.display = "block";
+            document.getElementById('mouth_l').style.display = "none";
+            document.getElementById('mouth_s').style.display = "block";
+            document.getElementById('retry-btn').style.display = "block";
+        }
+    }
+
+    function resetQuiz() {
+        isFrozen = false;
+        document.getElementById('retry-btn').style.display = "none";
+        ['eyes_s', 'mouth_s'].forEach(id => document.getElementById(id).style.display = "none");
+        document.getElementById('eyes_n').style.display = "block";
+        document.getElementById('mouth_l').style.display = "block";
+        showQuiz();
+    }
+
+    function resizeCanvas() {
+        const c = document.querySelector('.canvas');
+        const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        c.style.transform = `scale(${s})`;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+</script>
+</body>
+</html>
