@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --v-top: 7.2%;    
+            --v-left: 5.2%;   
+            --v-width: 89.6%; 
+            --v-height: 85.6%;
+            --v-round: 20px;
+            --green: #2ecc71;
+            --red: #e74c3c;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 4 / 3;
+        }
+
+        /* Рамка планшета */
+        .ipad-mask {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            object-fit: contain;
+        }
+
+        /* Область экрана внутри рамки */
+        .screen-area {
+            position: absolute;
+            top: var(--v-top);
+            left: var(--v-left);
+            width: var(--v-width);
+            height: var(--v-height);
+            background: #000;
+            overflow: hidden;
+            border-radius: var(--v-round);
+            z-index: 1;
+        }
+
+        /* Видео на весь экран без полос */
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Растягивает на весь экран */
+            display: block;
+        }
+
+        /* Центральная кнопка запуска */
+        #startOverlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 40;
+            cursor: pointer;
+        }
+        #startOverlay svg { fill: #fff; width: 80px; }
+
+        /* ИНТЕРАКТИВНЫЙ ЭКРАН ВЫБОРА */
+        .choice-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none; /* Скрыт по умолчанию */
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            z-index: 50;
+        }
+
+        .choice-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 3px solid #fff;
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            width: 180px;
+        }
+
+        .choice-btn:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .choice-btn.like:hover { border-color: var(--green); box-shadow: 0 0 20px var(--green); }
+        .choice-btn.dislike:hover { border-color: var(--red); box-shadow: 0 0 20px var(--red); }
+
+        .choice-btn svg {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+        
+        .choice-btn span {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .like svg { fill: var(--green); }
+        .dislike svg { fill: var(--red); transform: scaleY(-1); }
+
+    </style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+    <source src="zvuki-na-ulice-goroda.mp3" type="audio/mpeg">
+</audio>
+
+<div class="main-container">
+    <img src="ipadnew2.png" class="ipad-mask" alt="iPad">
+    
+    <div class="screen-area">
+        <div id="startOverlay" onclick="startExperience()">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+
+        <div id="choiceScreen" class="choice-screen">
+            <button class="choice-btn like" onclick="handleChoice('like')">
+                <svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>
+                <span>Понравилось</span>
+            </button>
+
+            <button class="choice-btn dislike" onclick="handleChoice('dislike')">
+                <svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>
+                <span>Не понравилось</span>
+            </button>
+        </div>
+
+        <video id="mainVideo" playsinline>
+            <source id="videoSrc" src="sasact.mp4" type="video/mp4">
+        </video>
+    </div>
+</div>
+
+<script>
+    const video = document.getElementById('mainVideo');
+    const startOverlay = document.getElementById('startOverlay');
+    const choiceScreen = document.getElementById('choiceScreen');
+    const bgMusic = document.getElementById('bgMusic');
+    
+    let isInteractivityTriggered = false;
+
+    // Устанавливаем громкость фона 25-30%
+    bgMusic.volume = 0.28;
+
+    function startExperience() {
+        startOverlay.style.display = 'none';
+        video.play();
+        bgMusic.play();
+    }
+
+    video.ontimeupdate = () => {
+        // Если это первое видео и оно дошло до 8 секунд
+        if (!isInteractivityTriggered && video.currentSrc.includes('sasact.mp4')) {
+            if (video.currentTime >= 8) {
+                video.pause();
+                video.currentTime = 8; // Замираем на 8-й секунде
+                showChoice();
+                isInteractivityTriggered = true;
+            }
+        }
+    };
+
+    function showChoice() {
+        choiceScreen.style.display = 'flex';
+    }
+
+    function handleChoice(type) {
+        choiceScreen.style.display = 'none';
+        
+        if (type === 'like') {
+            video.src = 'sasact3.mp4';
+        } else {
+            video.src = 'sasact2.mp4';
+        }
+
+        video.load();
+        video.play();
+    }
+
+    // Обработка случая, если видео закончилось раньше 8 секунд (на всякий случай)
+    video.onended = () => {
+        if (!isInteractivityTriggered && video.currentSrc.includes('sasact.mp4')) {
+            showChoice();
+            isInteractivityTriggered = true;
+        }
+    };
+</script>
+
+</body>
+</html>
