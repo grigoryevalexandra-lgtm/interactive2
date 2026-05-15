@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивный плеер iPad</title>
+    <style>
+        :root {
+            /* ИСПРАВЛЕННЫЕ КООРДИНАТЫ: теперь видео не вылезает за края */
+            --v-top: 5.6%;    
+            --v-left: 4.7%;   
+            --v-width: 90.6%; 
+            --v-height: 88.8%;
+            --v-round: 20px;
+            
+            /* ЦВЕТОВАЯ ПАЛИТРА */
+            --accent: #D4AF37; /* Золотой Play */
+            --bg-black: #000000;
+            --graphite: #383838;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-color: #f5f5f7;
+            font-family: 'Inter', -apple-system, sans-serif;
+            padding: 20px;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .ipad-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 11; 
+            z-index: 2;
+        }
+
+        .ipad-mask {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 100;
+            pointer-events: none;
+            object-fit: fill;
+        }
+
+        .screen-area {
+            position: absolute;
+            top: var(--v-top);
+            left: var(--v-left);
+            width: var(--v-width);
+            height: var(--v-height);
+            background: var(--bg-black);
+            overflow: hidden;
+            border-radius: var(--v-round);
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ОРИГИНАЛЬНОЕ ОТОБРАЖЕНИЕ (CONTAIN) */
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            background: var(--bg-black);
+            cursor: pointer;
+        }
+
+        /* Золотая кнопка Play */
+        .big-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px;
+            height: 90px;
+            background: var(--accent);
+            border: 4px solid #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 60;
+            cursor: pointer;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .big-play-btn:hover { transform: translate(-50%, -50%) scale(1.1); }
+        .big-play-btn svg { width: 40px; height: 40px; fill: #fff; margin-left: 6px; }
+
+        .is-playing .big-play-btn {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Управление */
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 30px 20px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 55;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .screen-area:hover .video-controls {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .control-row { display: flex; align-items: center; gap: 12px; }
+
+        .progress-container {
+            flex-grow: 1; height: 5px; background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px; cursor: pointer; position: relative; transition: height 0.2s;
+        }
+        .progress-container:hover { height: 8px; }
+        .progress-bar { height: 100%; background: var(--accent); width: 0%; border-radius: 3px; }
+
+        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; padding: 5px; }
+        .icon-btn svg { width: 22px; height: 22px; fill: currentColor; }
+        .time-label { color: #fff; font-size: 12px; font-family: monospace; min-width: 90px; }
+        .speed-badge {
+            background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 11px;
+            padding: 3px 10px; border-radius: 12px; font-weight: 700; cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Текст под iPad */
+        .carousel-bottom { width: 100%; }
+        .prompt-box {
+            background: #fff; border: 1px solid #e5e5e7; border-radius: 24px;
+            padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            display: flex; flex-direction: column; gap: 20px;
+        }
+        .prompt-item { display: none; }
+        .prompt-item.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .header { font-size: 12px; font-weight: 800; color: #8e8e93; text-transform: uppercase; letter-spacing: 1.5px; }
+        .text { font-size: 18px; color: #1d1d1f; font-weight: 700; }
+        .nav { display: flex; gap: 15px; }
+        .nav-btn {
+            width: 44px; height: 44px; border: 2px solid var(--graphite); border-radius: 50%;
+            background: transparent; cursor: pointer; display: flex; justify-content: center;
+            align-items: center; transition: all 0.2s; color: var(--graphite);
+        }
+        .nav-btn:hover { background: var(--graphite); color: #fff; }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="ipad-wrapper">
+        <img src="ipadnew2.png" class="ipad-mask" alt="iPad Frame">
+        
+        <div class="screen-area" id="screenArea">
+            <!-- ОДИН ВИДЕО-ЭЛЕМЕНТ (Смена src) -->
+            <video id="mainVideo" playsinline muted></video>
+
+            <div class="big-play-btn" id="centralPlayBtn">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+
+            <div class="video-controls">
+                <div class="progress-container" id="progressBarContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="control-row">
+                    <button class="icon-btn" id="playPauseBtn">
+                        <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <svg id="pauseIcon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                    </button>
+                    <button class="icon-btn" id="rewindBtn">
+                        <svg viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+                    </button>
+                    <div class="time-label" id="timeLabel">00:00 / 00:00</div>
+                    <div style="flex-grow: 1;"></div>
+                    <div class="speed-badge" id="speedBtn">1x</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-bottom">
+        <div class="prompt-box">
+            <div id="content-container">
+                <div id="p0" class="prompt-item active">
+                    <div class="header">Видео № 1</div>
+                    <div class="text">Создание анимации в Adobe Animator</div>
+                </div>
+                <div id="p1" class="prompt-item">
+                    <div class="header">Видео № 2</div>
+                    <div class="text">Финальный результат</div>
+                </div>
+            </div>
+            <div class="nav">
+                <button class="nav-btn" onclick="move(-1)">
+                    <svg width="20" height="20" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/></svg>
+                </button>
+                <button class="nav-btn" onclick="move(1)">
+                    <svg width="20" height="20" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const videoSources = [
+        "https://github.com/grigoryevalexandra-lgtm/interactive2/raw/refs/heads/main/ScreenRecorderProject17_1.mp4",
+        "https://github.com/grigoryevalexandra-lgtm/interactive2/raw/refs/heads/main/animat2.mp4"
+    ];
+
+    let cur = 0;
+    const speeds = [0.5, 1, 1.5, 2];
+    let speedIdx = 1;
+
+    const video = document.getElementById('mainVideo');
+    const screenArea = document.getElementById('screenArea');
+    const centralPlayBtn = document.getElementById('centralPlayBtn');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const progressBar = document.getElementById('progressBar');
+    const progressBarContainer = document.getElementById('progressBarContainer');
+    const timeLabel = document.getElementById('timeLabel');
+    const speedBtn = document.getElementById('speedBtn');
+    const rewindBtn = document.getElementById('rewindBtn');
+
+    const prompts = [document.getElementById('p0'), document.getElementById('p1'), document.getElementById('p2')];
+
+    function switchVideo(index) {
+        cur = index;
+        video.pause();
+        video.src = videoSources[cur];
+        video.load();
+        video.playbackRate = speeds[speedIdx];
+        
+        screenArea.classList.remove('is-playing');
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+
+        prompts.forEach((p, i) => p.classList.toggle('active', i === cur));
+    }
+
+    switchVideo(0);
+
+    function move(dir) {
+        let next = (cur + dir + 3) % 3;
+        switchVideo(next);
+    }
+
+    function togglePlay() {
+        if (video.paused) {
+            video.play();
+            screenArea.classList.add('is-playing');
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+        } else {
+            video.pause();
+            screenArea.classList.remove('is-playing');
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+        }
+    }
+
+    centralPlayBtn.onclick = togglePlay;
+    playPauseBtn.onclick = togglePlay;
+    video.onclick = togglePlay;
+
+    rewindBtn.onclick = () => video.currentTime = Math.max(0, video.currentTime - 5);
+
+    speedBtn.onclick = () => {
+        speedIdx = (speedIdx + 1) % speeds.length;
+        video.playbackRate = speeds[speedIdx];
+        speedBtn.textContent = speeds[speedIdx] + 'x';
+    };
+
+    video.ontimeupdate = () => {
+        if (!isNaN(video.duration)) {
+            const pct = (video.currentTime / video.duration) * 100;
+            progressBar.style.width = pct + '%';
+            
+            const fmt = (t) => {
+                const m = Math.floor(t / 60);
+                const s = Math.floor(t % 60);
+                return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+            };
+            timeLabel.textContent = `${fmt(video.currentTime)} / ${fmt(video.duration)}`;
+        }
+    };
+
+    progressBarContainer.onclick = (e) => {
+        const rect = progressBarContainer.getBoundingClientRect();
+        const pos = (e.clientX - rect.left) / rect.width;
+        video.currentTime = pos * video.duration;
+    };
+
+    video.onplay = () => screenArea.classList.add('is-playing');
+    video.onpause = () => screenArea.classList.remove('is-playing');
+
+</script>
+</body>
+</html>
