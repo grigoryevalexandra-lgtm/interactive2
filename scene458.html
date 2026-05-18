@@ -139,14 +139,14 @@
     };
 
     video.onended = () => {
-        if (video.src.includes('fin4.mp4') || video.src.includes('fin3.mp4')) {
+        if (video.src.includes('voloshin.mp4') || video.src.includes('fin3.mp4')) {
             restartScreen.style.display = 'flex';
         }
     };
 
     function makeChoice(type) {
         choiceScreen.style.display = 'none';
-        video.src = (type === 'like') ? 'fin3.mp4' : 'fin4.mp4';
+        video.src = (type === 'like') ? 'fin3.mp4' : 'voloshin.mp4';
         video.load();
         video.play();
     }
