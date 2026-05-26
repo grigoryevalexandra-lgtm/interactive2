@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Интерактив: Полный фрагмент схемы ОЖР</title>
+    <style>
+        body {
+            background-color: #fff3eb;
+            margin: 0;
+            padding: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #000;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-align: left;
+            font-size: 24px;
+        }
+
+        .description {
+            margin-bottom: 30px;
+            font-size: 18px;
+            text-align: left;
+        }
+
+        .code-block {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 16px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            opacity: 0;
+            text-align: left;
+        }
+
+        /* Латинские символы и теги */
+        .tag {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Содержимое тегов (русский текст) */
+        .content {
+            opacity: 0;
+            transition: all 0.6s ease-in-out;
+            display: inline-block;
+        }
+
+        /* Подсветка новым цветом #d9f0f4 (остаётся навсегда) */
+        .content.highlight {
+            opacity: 1;
+            background-color: #d9f0f4; 
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+
+        .visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="interactive-target">
+    <h2>Как выглядит структура Общего журнала работ (ОЖР) в XSD</h2>
+    <div class="description">Полный xml-фрагмент схемы с описанием полей и типов данных.</div>
+    
+    <div class="code-block" id="xmlBlock">
+<span class="tag">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="tag">&lt;xs:schema targetNamespace="http://idjournals/GeneralWorkJournal.xsd"</span>
+<span class="tag">           elementFormDefault="qualified"</span>
+<span class="tag">           xmlns:xs="http://www.w3.org/2001/XMLSchema"</span>
+<span class="tag">           xmlns:jnl="http://idjournals/GeneralWorkJournal.xsd"</span>
+<span class="tag">           xmlns:ct="http://types/CommonTypes.xsd"</span>
+<span class="tag">           xmlns:bt="http://types/BaseTypes.xsd"</span>
+<span class="tag">           xmlns:bd="http://types/BaseDocument.xsd"&gt;</span>
+ 
+<span class="tag">  &lt;xs:import schemaLocation="../types/CommonTypes.xsd" namespace="http://types/CommonTypes.xsd"/&gt;</span>
+<span class="tag">  &lt;xs:import schemaLocation="../types/BaseTypes.xsd" namespace="http://types/BaseTypes.xsd"/&gt;</span>
+<span class="tag">  &lt;xs:import schemaLocation="../types/BaseDocument.xsd" namespace="http://types/BaseDocument.xsd"/&gt;</span>
+ 
+<span class="tag">  &lt;xs:complexType name="generalworkJournal"&gt;</span>
+<span class="tag">    &lt;xs:annotation&gt;</span>
+<span class="tag">      &lt;xs:documentation&gt;</span><span class="content">Общий журнал работ</span><span class="tag">&lt;/xs:documentation&gt;</span>
+<span class="tag">    &lt;/xs:annotation&gt;</span>
+<span class="tag">    &lt;xs:complexContent&gt;</span>
+<span class="tag">      &lt;xs:extension base="bd:baseDocument"&gt;</span>
+<span class="tag">        &lt;xs:sequence&gt;</span>
+<span class="tag">          &lt;xs:element name="docInfo"&gt;</span>
+<span class="tag">            &lt;xs:annotation&gt;</span>
+<span class="tag">              &lt;xs:documentation&gt;</span><span class="content">Идентификатор документа</span><span class="tag">&lt;/xs:documentation&gt;</span>
+<span class="tag">            &lt;/xs:annotation&gt;</span>
+<span class="tag">            &lt;xs:complexType&gt;</span>
+<span class="tag">              &lt;xs:sequence&gt;</span>
+<span class="tag">                &lt;xs:element name="name" type="bt:notEmptyString"&gt;</span>
+<span class="tag">                  &lt;xs:annotation&gt;</span>
+<span class="tag">                    &lt;xs:documentation&gt;</span><span class="content">Наименование документа</span><span class="tag">&lt;/xs:documentation&gt;</span>
+<span class="tag">                  &lt;/xs:annotation&gt;</span>
+<span class="tag">                &lt;/xs:element&gt;</span>
+<span class="tag">                &lt;xs:element name="number" type="bt:notEmptyString" minOccurs="0"&gt;</span>
+    </div>
+</div>
+
+<script>
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.3
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                startAnimation();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    const target = document.getElementById('interactive-target');
+    observer.observe(target);
+
+    function startAnimation() {
+        const tags = document.querySelectorAll('.tag');
+        const contents = document.querySelectorAll('.content');
+        const block = document.getElementById('xmlBlock');
+
+        // 1. Появление всего блока
+        block.classList.add('visible');
+
+        // 2. Появление тегов по очереди
+        tags.forEach((tag, index) => {
+            setTimeout(() => {
+                tag.style.opacity = '1';
+            }, index * 60); 
+        });
+
+        // 3. Подсветка контента через 2.5 секунды (остаётся навсегда)
+        setTimeout(() => {
+            contents.forEach((content) => {
+                content.classList.add('highlight');
+            });
+        }, 2500);
+    }
+</script>
+
+</body>
+</html>
