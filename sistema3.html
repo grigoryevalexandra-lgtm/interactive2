@@ -7,8 +7,8 @@
         body {
             background-color: #fff3eb;
             margin: 0;
-            padding: 40px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 15px 40px 40px 40px; /* Уменьшили верхний отступ, чтобы поднять заголовки */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             color: #000;
         }
 
@@ -25,7 +25,7 @@
         }
 
         .description {
-            margin-bottom: 30px;
+            margin-bottom: 15px; /* Уменьшили с 30px, чтобы подтянуть схему выше */
             font-size: 18px;
             text-align: left;
         }
@@ -42,13 +42,13 @@
         /* Латинские символы и теги */
         .tag {
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            transition: opacity 0.3s ease-in-out; /* Ускорили появление тегов до 0.3s */
         }
 
         /* Содержимое тегов (русский текст) */
         .content {
             opacity: 0;
-            transition: all 0.6s ease-in-out;
+            transition: all 0.3s ease-in-out; /* Ускорили появление подсветки до 0.3s */
             display: inline-block;
         }
 
@@ -134,19 +134,19 @@
         // 1. Появление всего блока
         block.classList.add('visible');
 
-        // 2. Появление тегов по очереди
+        // 2. Появление тегов по очереди (ускорили шаг до 25мс)
         tags.forEach((tag, index) => {
             setTimeout(() => {
                 tag.style.opacity = '1';
-            }, index * 60); 
+            }, index * 25); 
         });
 
-        // 3. Подсветка контента через 2.5 секунды (остаётся навсегда)
+        // 3. Подсветка контента (сократили ожидание до 1 секунды)
         setTimeout(() => {
             contents.forEach((content) => {
                 content.classList.add('highlight');
             });
-        }, 2500);
+        }, 1000);
     }
 </script>
 
