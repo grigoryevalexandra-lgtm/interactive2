@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Задание для закрепления. Блок 2</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: учебный лист — узкая колонка текста, широкие медиа-врезки, таймкоды видео как рабочая сетка */
+:root{
+  --paper:#f3f5f8; --sheet:#ffffff; --ink:#1b2430; --muted:#5b6778; --line:#d5dbe4;
+  --accent:#d9661c; --accent-soft:#fbe9dc; --blue:#2c5d9e; --grid:rgba(44,93,158,.07);
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#15191f; --sheet:#1c222a; --ink:#e6eaf0; --muted:#9aa5b5; --line:#2f3844;
+  --accent:#f08a43; --accent-soft:#3a2a1e; --blue:#7fa8e0; --grid:rgba(127,168,224,.06); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#15191f; --sheet:#1c222a; --ink:#e6eaf0; --muted:#9aa5b5; --line:#2f3844;
+  --accent:#f08a43; --accent-soft:#3a2a1e; --blue:#7fa8e0; --grid:rgba(127,168,224,.06); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--f-body);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;}
+.wrap{max-width:980px;margin:0 auto;padding-block:32px 64px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:grid;gap:20px;margin-bottom:28px}
+.eyebrow{font:600 13px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font-weight:700;font-size:clamp(28px,4.6vw,44px);line-height:1.15;margin:0;text-wrap:balance}
+.lead{color:var(--muted);max-width:65ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 13px/1 var(--f-mono);padding:7px 10px;border:1px solid var(--line);border-radius:4px;background:var(--sheet);color:var(--muted)}
+.cover{border-radius:6px;border:1px solid var(--line);display:block;width:100%}
+nav.toc{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:18px 20px;margin:28px 0 8px}
+nav.toc h2{margin:0 0 10px;font-size:15px;font-family:var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+nav.toc ol{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:4px 24px}
+nav.toc a{display:flex;gap:12px;color:var(--ink);text-decoration:none;padding:4px 0}
+nav.toc a:hover span:last-child{color:var(--accent)}
+.tc{font:500 13px/1.9 var(--f-mono);color:var(--blue);font-variant-numeric:tabular-nums;min-width:44px}
+section{padding-top:40px}
+section h2{display:flex;align-items:baseline;gap:14px;font-size:clamp(22px,3vw,28px);line-height:1.25;margin:0 0 14px;text-wrap:balance}
+section h2 .tc{font-size:14px;flex:none}
+p,ul,ol.steps{max-width:68ch}
+ul{padding-left:1.2em}
+li{margin:4px 0}
+b{font-weight:600}
+kbd{font:500 .85em var(--f-mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:var(--sheet)}
+.ui{font-weight:600;color:var(--blue)}
+figure{margin:20px 0;display:grid;gap:8px}
+figure img{width:100%;border-radius:6px;border:1px solid var(--line);background:#222}
+figcaption{font-size:14px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+figcaption .tag{font:600 11px/1.6 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:0 6px;border-radius:3px}
+.tip{border-left:3px solid var(--accent);background:var(--sheet);padding:12px 16px;border-radius:0 6px 6px 0;max-width:68ch;margin:16px 0}
+.tip strong{color:var(--accent)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--sheet);margin:16px 0}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font:600 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td:first-child{white-space:nowrap;font-weight:600}
+td.tc{white-space:nowrap}
+.status{display:flex;flex-wrap:wrap;gap:4px;margin:12px 0}
+.status span{font:500 12px/1 var(--f-mono);padding:6px 8px;background:#2b3138;color:#cfd6df;border-radius:3px}
+.status span.on{background:#3a5f94;color:#fff}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.two figure{margin:0}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer ul{padding-left:1.2em}
+a{color:var(--blue)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+
+.sec{font-size:clamp(22px,3vw,28px);margin:48px 0 8px;padding-top:12px;border-top:2px solid var(--line)}
+.les{display:flex;gap:10px;align-items:baseline;font-size:19px;margin:28px 0 12px}
+.les .num{font:600 14px/1 var(--f-mono);color:var(--accent)}
+.q{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:0 0 14px}
+.q.good{border-color:#3d9a5b;box-shadow:inset 4px 0 0 #3d9a5b}
+.q.bad{border-color:#c4533a;box-shadow:inset 4px 0 0 #c4533a}
+.qh{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.qn{font:600 13px/1 var(--f-mono);background:var(--accent-soft);color:var(--accent);padding:5px 8px;border-radius:6px}
+.qt{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.qq{margin:6px 0 12px;font-weight:500}
+.q figure{margin:0 0 12px}.q img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:6px;display:block}
+.pics{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.pics figcaption{font-size:14px;color:var(--muted);margin-top:4px}
+.opts{display:grid;gap:6px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.opt:hover{border-color:var(--blue)}
+.opt input{margin-top:5px}
+.let{font:600 13px/1.9 var(--f-mono);color:var(--blue);min-width:1.2em}
+.right{list-style:none;padding:0;margin:0 0 10px;display:grid;gap:4px}
+.right li{display:flex;gap:10px}
+.pairs{display:grid;gap:6px}
+.pair{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:6px 10px;border:1px dashed var(--line);border-radius:8px}
+.ln{font:600 13px/1 var(--f-mono);color:var(--accent)}
+select,.wr{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:6px 10px}
+.wr{width:100%;max-width:420px}
+.fb{margin:10px 0 0;font-size:15px}
+.q.good .fb{color:#3d9a5b}.q.bad .fb{color:#c4533a}
+.bar{position:sticky;bottom:0;display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:24px}
+button{font:600 15px/1 var(--f-body);background:var(--accent);color:#fff;border:0;border-radius:8px;padding:11px 18px;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+#score{font:600 15px/1 var(--f-mono)}
+</style></head><body><div class="wrap">
+<header><div class="eyebrow">Блок 2 · Задание для закрепления</div><h1>Проверьте себя по второму блоку</h1>
+<p class="lead">По три задания на каждый урок: тесты, сопоставления и вопросы, где нужно вписать название команды. Программа не нужна. Выполните задание и нажмите «Проверить» — верные ответы подсветятся.</p>
+<div class="meta"><span class="chip">54 заданий</span><span class="chip">18 уроков</span><span class="chip">4 раздела</span></div></header>
+<nav class="toc"><h2>Разделы</h2><ol><li><a href="#r0">Выбор объектов в nanoCAD</a></li><li><a href="#r1">Штриховки и градиенты</a></li><li><a href="#r2">Редактирование объектов nanoCAD</a></li><li><a href="#r3">Настройка видимости и отображения объектов</a></li></ol></nav>
+<section id="r0"><h2 class="sec">Раздел 1. Выбор объектов в nanoCAD</h2>
+<h3 class="les"><span class="num">1.1</span>Выбор рамкой</h3>
+<article class="q" data-n="1"><div class="qh"><span class="qn">1</span><span class="qt">Тест</span></div><p class="qq">Вы ведёте рамку выбора справа налево. Какие объекты будут выбраны?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q1" value="0"><span class="let">а</span><span>Только объекты, целиком попавшие в рамку</span></label><label class="opt"><input type="radio" name="q1" value="1"><span class="let">б</span><span>Все объекты, которые рамка задевает хотя бы краем</span></label><label class="opt"><input type="radio" name="q1" value="2"><span class="let">в</span><span>Только объект, по которому начали вести рамку</span></label><label class="opt"><input type="radio" name="q1" value="3"><span class="let">г</span><span>Ничего: рамку можно вести только слева направо</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="2"><div class="qh"><span class="qn">2</span><span class="qt">Сопоставление</span></div><p class="qq">Сопоставьте рисунок и вид рамки.</p>
+<div class="pics"><figure><img src="Изображения/01 Синяя рамка.jpg" alt="Рисунок А" loading="lazy"><figcaption>Рисунок А</figcaption></figure><figure><img src="Изображения/02 Зелёная рамка.jpg" alt="Рисунок Б" loading="lazy"><figcaption>Рисунок Б</figcaption></figure></div>
+<ol class="right"><li><span class="let">А</span>Секущая рамка: ведётся справа налево, выбирает всё, что задевает</li><li><span class="let">Б</span>Рамка выбора: ведётся слева направо, выбирает только объекты целиком внутри</li></ol>
+<div class="pairs"><label class="pair"><span class="ln">1</span><span class="lt">Рисунок А</span><select name="q2_0"><option value="">—</option><option value="0">А</option><option value="1">Б</option></select></label><label class="pair"><span class="ln">2</span><span class="lt">Рисунок Б</span><select name="q2_1"><option value="">—</option><option value="0">А</option><option value="1">Б</option></select></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="3"><div class="qh"><span class="qn">3</span><span class="qt">Впишите ответ</span></div><p class="qq">Какой клавишей снимают выделение с объектов?</p>
+<input class="wr" type="text" name="q3" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">1.2</span>Быстрый выбор</h3>
+<article class="q" data-n="4"><div class="qh"><span class="qn">4</span><span class="qt">Впишите ответ</span></div><p class="qq">Напишите любое имя команды «Быстрый выбор», которое можно ввести с клавиатуры.</p>
+<input class="wr" type="text" name="q4" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<article class="q" data-n="5"><div class="qh"><span class="qn">5</span><span class="qt">Тест</span></div><p class="qq">В этом окне выбран тип объекта «Отрезок», свойства не уточнялись. Что произойдёт после нажатия OK?</p>
+<figure><img src="Изображения/03 Окно быстрого выбора.jpg" alt="Иллюстрация к заданию 5" loading="lazy"></figure>
+<div class="opts"><label class="opt"><input type="radio" name="q5" value="0"><span class="let">а</span><span>Окно закроется, ничего не выделится</span></label><label class="opt"><input type="radio" name="q5" value="1"><span class="let">б</span><span>Выделятся все отрезки чертежа</span></label><label class="opt"><input type="radio" name="q5" value="2"><span class="let">в</span><span>Выделится только последний построенный отрезок</span></label><label class="opt"><input type="radio" name="q5" value="3"><span class="let">г</span><span>Все отрезки будут удалены</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="6"><div class="qh"><span class="qn">6</span><span class="qt">Тест</span></div><p class="qq">Какие типы объектов предлагает список «Объект» в окне «Быстрый выбор»?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q6" value="0"><span class="let">а</span><span>Все типы объектов, которые умеет строить nanoCAD</span></label><label class="opt"><input type="radio" name="q6" value="1"><span class="let">б</span><span>Только отрезки и полилинии</span></label><label class="opt"><input type="radio" name="q6" value="2"><span class="let">в</span><span>Только те типы, которые уже есть в чертеже</span></label><label class="opt"><input type="radio" name="q6" value="3"><span class="let">г</span><span>Только объекты текущего слоя</span></label></div>
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">1.3</span>Выбор групп объектов</h3>
+<article class="q" data-n="7"><div class="qh"><span class="qn">7</span><span class="qt">Тест</span></div><p class="qq">Где находятся инструменты для работы с группами?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q7" value="0"><span class="let">а</span><span>Вкладка «Главная», панель «Группа»</span></label><label class="opt"><input type="radio" name="q7" value="1"><span class="let">б</span><span>Вкладка «Вид», панель «Слои»</span></label><label class="opt"><input type="radio" name="q7" value="2"><span class="let">в</span><span>Строка состояния</span></label><label class="opt"><input type="radio" name="q7" value="3"><span class="let">г</span><span>Меню «Файл»</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="8"><div class="qh"><span class="qn">8</span><span class="qt">Тест</span></div><p class="qq">Переключатель «Выбор группы» выключен. Что выделится при щелчке по одному элементу группы?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q8" value="0"><span class="let">а</span><span>Вся группа целиком</span></label><label class="opt"><input type="radio" name="q8" value="1"><span class="let">б</span><span>Только этот элемент</span></label><label class="opt"><input type="radio" name="q8" value="2"><span class="let">в</span><span>Все группы чертежа</span></label><label class="opt"><input type="radio" name="q8" value="3"><span class="let">г</span><span>Ничего не выделится</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="9"><div class="qh"><span class="qn">9</span><span class="qt">Тест</span></div><p class="qq">На рисунке окно «Группы объектов». Имя и пояснение группы заданы. Какой кнопкой выбирают объекты для новой группы?</p>
+<figure><img src="Изображения/04 Окно групп.jpg" alt="Иллюстрация к заданию 9" loading="lazy"></figure>
+<div class="opts"><label class="opt"><input type="radio" name="q9" value="0"><span class="let">а</span><span>«Добавить»</span></label><label class="opt"><input type="radio" name="q9" value="1"><span class="let">б</span><span>«Новая»</span></label><label class="opt"><input type="radio" name="q9" value="2"><span class="let">в</span><span>«Разбить»</span></label><label class="opt"><input type="radio" name="q9" value="3"><span class="let">г</span><span>«Переименовать»</span></label></div>
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">1.4</span>Выбор подобных объектов</h3>
+<article class="q" data-n="10"><div class="qh"><span class="qn">10</span><span class="qt">Тест</span></div><p class="qq">В контекстном меню выбран подсвеченный пункт. Что произойдёт?</p>
+<figure><img src="Изображения/05 Контекстное меню.jpg" alt="Иллюстрация к заданию 10" loading="lazy"></figure>
+<div class="opts"><label class="opt"><input type="radio" name="q10" value="0"><span class="let">а</span><span>Выделятся все объекты того же типа и с теми же свойствами</span></label><label class="opt"><input type="radio" name="q10" value="1"><span class="let">б</span><span>Выделятся все объекты чертежа</span></label><label class="opt"><input type="radio" name="q10" value="2"><span class="let">в</span><span>Выбор станет обратным</span></label><label class="opt"><input type="radio" name="q10" value="3"><span class="let">г</span><span>Откроется окно «Быстрый выбор»</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="11"><div class="qh"><span class="qn">11</span><span class="qt">Тест</span></div><p class="qq">Где, кроме контекстного меню, есть кнопка «Выбрать похожие объекты»?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q11" value="0"><span class="let">а</span><span>На панели «Свойства»</span></label><label class="opt"><input type="radio" name="q11" value="1"><span class="let">б</span><span>В строке состояния</span></label><label class="opt"><input type="radio" name="q11" value="2"><span class="let">в</span><span>В окне «Штриховка»</span></label><label class="opt"><input type="radio" name="q11" value="3"><span class="let">г</span><span>На вкладке «Вывод»</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="12"><div class="qh"><span class="qn">12</span><span class="qt">Впишите ответ</span></div><p class="qq">Как называется команда, которая выделяет все объекты, похожие на выбранный образец?</p>
+<input class="wr" type="text" name="q12" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+</section>
+<section id="r1"><h2 class="sec">Раздел 2. Штриховки и градиенты</h2>
+<h3 class="les"><span class="num">2.1</span>Создание штриховок и градиентов</h3>
+<article class="q" data-n="13"><div class="qh"><span class="qn">13</span><span class="qt">Впишите ответ</span></div><p class="qq">Какое сочетание клавиш запускает команду «Штриховка»?</p>
+<input class="wr" type="text" name="q13" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<article class="q" data-n="14"><div class="qh"><span class="qn">14</span><span class="qt">Сопоставление</span></div><p class="qq">Сопоставьте параметр окна «Штриховка» и его действие.</p>
+<ol class="right"><li><span class="let">А</span>Делает рисунок штриховки крупнее или мельче</li><li><span class="let">Б</span>Поворачивает рисунок штриховки</li><li><span class="let">В</span>Штриховка следует за изменением контура</li><li><span class="let">Г</span>Каждая выбранная область получает свою штриховку</li></ol>
+<div class="pairs"><label class="pair"><span class="ln">1</span><span class="lt">Ассоциативная</span><select name="q14_0"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option><option value="3">Г</option></select></label><label class="pair"><span class="ln">2</span><span class="lt">Создавать отдельные штриховки</span><select name="q14_1"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option><option value="3">Г</option></select></label><label class="pair"><span class="ln">3</span><span class="lt">Масштаб</span><select name="q14_2"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option><option value="3">Г</option></select></label><label class="pair"><span class="ln">4</span><span class="lt">Угол</span><select name="q14_3"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option><option value="3">Г</option></select></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="15"><div class="qh"><span class="qn">15</span><span class="qt">Тест</span></div><p class="qq">На рисунке вкладка «Градиент». Какого типа градиентной заливки здесь нет?</p>
+<figure><img src="Изображения/06 Вкладка Градиент.jpg" alt="Иллюстрация к заданию 15" loading="lazy"></figure>
+<div class="opts"><label class="opt"><input type="radio" name="q15" value="0"><span class="let">а</span><span>Сферический</span></label><label class="opt"><input type="radio" name="q15" value="1"><span class="let">б</span><span>Цилиндр</span></label><label class="opt"><input type="radio" name="q15" value="2"><span class="let">в</span><span>Конический</span></label><label class="opt"><input type="radio" name="q15" value="3"><span class="let">г</span><span>Линейный</span></label></div>
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">2.2</span>Редактирование штриховок и градиентов</h3>
+<article class="q" data-n="16"><div class="qh"><span class="qn">16</span><span class="qt">Тест</span></div><p class="qq">Контур обычной, неассоциативной штриховки изменили ручками. Что произойдёт со штриховкой?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q16" value="0"><span class="let">а</span><span>Дотянется до нового контура</span></label><label class="opt"><input type="radio" name="q16" value="1"><span class="let">б</span><span>Останется прежней, не следуя за контуром</span></label><label class="opt"><input type="radio" name="q16" value="2"><span class="let">в</span><span>Удалится</span></label><label class="opt"><input type="radio" name="q16" value="3"><span class="let">г</span><span>Превратится в градиент</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="17"><div class="qh"><span class="qn">17</span><span class="qt">Впишите ответ</span></div><p class="qq">Как называется кнопка в окне редактирования штриховки, которая заново связывает штриховку с контуром?</p>
+<input class="wr" type="text" name="q17" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<article class="q" data-n="18"><div class="qh"><span class="qn">18</span><span class="qt">Тест</span></div><p class="qq">Штриховки на чертеже перестали отображаться. Что нужно проверить в первую очередь?</p>
+<figure><img src="Изображения/07 Строка состояния.jpg" alt="Иллюстрация к заданию 18" loading="lazy"></figure>
+<div class="opts"><label class="opt"><input type="radio" name="q18" value="0"><span class="let">а</span><span>Кнопку «ШТРИХОВКА» в строке состояния</span></label><label class="opt"><input type="radio" name="q18" value="1"><span class="let">б</span><span>Масштаб образца</span></label><label class="opt"><input type="radio" name="q18" value="2"><span class="let">в</span><span>Цвет текущего слоя</span></label><label class="opt"><input type="radio" name="q18" value="3"><span class="let">г</span><span>Порядок следования</span></label></div>
+<p class="fb" hidden></p></article>
+</section>
+<section id="r2"><h2 class="sec">Раздел 3. Редактирование объектов nanoCAD</h2>
+<h3 class="les"><span class="num">3.1</span>Перемещение объектов</h3>
+<article class="q" data-n="19"><div class="qh"><span class="qn">19</span><span class="qt">Впишите ответ</span></div><p class="qq">Какое сочетание клавиш запускает команду «Перемещение»?</p>
+<input class="wr" type="text" name="q19" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<article class="q" data-n="20"><div class="qh"><span class="qn">20</span><span class="qt">Тест</span></div><p class="qq">Объекты выбраны, нажат Enter. Что программа спросит дальше?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q20" value="0"><span class="let">а</span><span>Угол поворота</span></label><label class="opt"><input type="radio" name="q20" value="1"><span class="let">б</span><span>Базовую точку</span></label><label class="opt"><input type="radio" name="q20" value="2"><span class="let">в</span><span>Масштаб</span></label><label class="opt"><input type="radio" name="q20" value="3"><span class="let">г</span><span>Имя группы</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="21"><div class="qh"><span class="qn">21</span><span class="qt">Тест</span></div><p class="qq">Почему перемещать удобнее заранее выделенные объекты?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q21" value="0"><span class="let">а</span><span>Так перемещение работает точнее</span></label><label class="opt"><input type="radio" name="q21" value="1"><span class="let">б</span><span>Шаг выбора пропускается, и программа сразу спрашивает базовую точку</span></label><label class="opt"><input type="radio" name="q21" value="2"><span class="let">в</span><span>Иначе объекты скопируются</span></label><label class="opt"><input type="radio" name="q21" value="3"><span class="let">г</span><span>Только так работает динамический ввод</span></label></div>
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">3.2</span>Копирование объектов</h3>
+<article class="q" data-n="22"><div class="qh"><span class="qn">22</span><span class="qt">Впишите ответ</span></div><p class="qq">Какое сочетание клавиш запускает команду «Копирование»?</p>
+<input class="wr" type="text" name="q22" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<article class="q" data-n="23"><div class="qh"><span class="qn">23</span><span class="qt">Тест</span></div><p class="qq">Чем копирование отличается от перемещения?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q23" value="0"><span class="let">а</span><span>Исходные объекты остаются на месте</span></label><label class="opt"><input type="radio" name="q23" value="1"><span class="let">б</span><span>Не нужна базовая точка</span></label><label class="opt"><input type="radio" name="q23" value="2"><span class="let">в</span><span>Копировать можно только один объект</span></label><label class="opt"><input type="radio" name="q23" value="3"><span class="let">г</span><span>Копия всегда попадает в другой слой</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="24"><div class="qh"><span class="qn">24</span><span class="qt">Тест</span></div><p class="qq">Вы вставили первую копию. Как завершить команду?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q24" value="0"><span class="let">а</span><span>Команда завершится сама</span></label><label class="opt"><input type="radio" name="q24" value="1"><span class="let">б</span><span>Нажать Esc</span></label><label class="opt"><input type="radio" name="q24" value="2"><span class="let">в</span><span>Нажать Ctrl+D</span></label><label class="opt"><input type="radio" name="q24" value="3"><span class="let">г</span><span>Дважды щёлкнуть по копии</span></label></div>
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">3.3</span>Поворот объектов</h3>
+<article class="q" data-n="25"><div class="qh"><span class="qn">25</span><span class="qt">Впишите ответ</span></div><p class="qq">Какое сочетание клавиш запускает команду «Поворот»?</p>
+<input class="wr" type="text" name="q25" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<article class="q" data-n="26"><div class="qh"><span class="qn">26</span><span class="qt">Тест</span></div><p class="qq">Какую роль играет базовая точка в команде «Поворот»?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q26" value="0"><span class="let">а</span><span>Это центр вращения</span></label><label class="opt"><input type="radio" name="q26" value="1"><span class="let">б</span><span>Это точка, куда переместится объект</span></label><label class="opt"><input type="radio" name="q26" value="2"><span class="let">в</span><span>Это начало оси отражения</span></label><label class="opt"><input type="radio" name="q26" value="3"><span class="let">г</span><span>Базовая точка в повороте не нужна</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="27"><div class="qh"><span class="qn">27</span><span class="qt">Тест</span></div><p class="qq">Как удобнее всего задать точный угол поворота?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q27" value="0"><span class="let">а</span><span>На глаз, мышью</span></label><label class="opt"><input type="radio" name="q27" value="1"><span class="let">б</span><span>Вписать число в динамическом вводе</span></label><label class="opt"><input type="radio" name="q27" value="2"><span class="let">в</span><span>Через панель «Свойства»</span></label><label class="opt"><input type="radio" name="q27" value="3"><span class="let">г</span><span>Через окно «Быстрый выбор»</span></label></div>
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">3.4</span>Создание зеркальной копии объектов</h3>
+<article class="q" data-n="28"><div class="qh"><span class="qn">28</span><span class="qt">Тест</span></div><p class="qq">На этот вопрос ответили «Да». Что останется на чертеже?</p>
+<figure><img src="Изображения/08 Запрос команды Зеркало.jpg" alt="Иллюстрация к заданию 28" loading="lazy"></figure>
+<div class="opts"><label class="opt"><input type="radio" name="q28" value="0"><span class="let">а</span><span>Исходные объекты и их зеркальная копия</span></label><label class="opt"><input type="radio" name="q28" value="1"><span class="let">б</span><span>Только зеркальная копия</span></label><label class="opt"><input type="radio" name="q28" value="2"><span class="let">в</span><span>Только исходные объекты</span></label><label class="opt"><input type="radio" name="q28" value="3"><span class="let">г</span><span>Ничего</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="29"><div class="qh"><span class="qn">29</span><span class="qt">Тест</span></div><p class="qq">Как задаётся ось отражения?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q29" value="0"><span class="let">а</span><span>Только горизонтально</span></label><label class="opt"><input type="radio" name="q29" value="1"><span class="let">б</span><span>Только вертикально</span></label><label class="opt"><input type="radio" name="q29" value="2"><span class="let">в</span><span>Двумя точками, в любом направлении</span></label><label class="opt"><input type="radio" name="q29" value="3"><span class="let">г</span><span>Выбором готового отрезка</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="30"><div class="qh"><span class="qn">30</span><span class="qt">Впишите ответ</span></div><p class="qq">Как называется команда, которая отражает объекты относительно оси?</p>
+<input class="wr" type="text" name="q30" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">3.5</span>Масштабирование объектов</h3>
+<article class="q" data-n="31"><div class="qh"><span class="qn">31</span><span class="qt">Тест</span></div><p class="qq">Объект отмасштабировали с коэффициентом 0,5. Что с ним произошло?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q31" value="0"><span class="let">а</span><span>Увеличился в два раза</span></label><label class="opt"><input type="radio" name="q31" value="1"><span class="let">б</span><span>Уменьшился в два раза</span></label><label class="opt"><input type="radio" name="q31" value="2"><span class="let">в</span><span>Повернулся на 50°</span></label><label class="opt"><input type="radio" name="q31" value="3"><span class="let">г</span><span>Сдвинулся на 0,5 мм</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="32"><div class="qh"><span class="qn">32</span><span class="qt">Сопоставление</span></div><p class="qq">На рисунке запрос команды «Масштаб». Сопоставьте параметр и его назначение.</p>
+<figure><img src="Изображения/09 Запрос команды Масштаб.jpg" alt="Иллюстрация к заданию 32" loading="lazy"></figure>
+<ol class="right"><li><span class="let">А</span>Разные коэффициенты по горизонтали и вертикали</li><li><span class="let">Б</span>Исходный объект остаётся, масштабируется его копия</li><li><span class="let">В</span>Масштаб вычисляется по нужной длине выбранного отрезка</li></ol>
+<div class="pairs"><label class="pair"><span class="ln">1</span><span class="lt">Копия</span><select name="q32_0"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option></select></label><label class="pair"><span class="ln">2</span><span class="lt">Опорный отрезок</span><select name="q32_1"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option></select></label><label class="pair"><span class="ln">3</span><span class="lt">разный масштабXY</span><select name="q32_2"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option></select></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="33"><div class="qh"><span class="qn">33</span><span class="qt">Тест</span></div><p class="qq">Какая точка остаётся на месте при масштабировании?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q33" value="0"><span class="let">а</span><span>Центр экрана</span></label><label class="opt"><input type="radio" name="q33" value="1"><span class="let">б</span><span>Начало координат</span></label><label class="opt"><input type="radio" name="q33" value="2"><span class="let">в</span><span>Базовая точка</span></label><label class="opt"><input type="radio" name="q33" value="3"><span class="let">г</span><span>Ближайшая к курсору вершина</span></label></div>
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">3.6</span>Растягивание объектов</h3>
+<article class="q" data-n="34"><div class="qh"><span class="qn">34</span><span class="qt">Тест</span></div><p class="qq">Какой рамкой выбирают объекты для растягивания?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q34" value="0"><span class="let">а</span><span>Синей, слева направо</span></label><label class="opt"><input type="radio" name="q34" value="1"><span class="let">б</span><span>Зелёной секущей, справа налево</span></label><label class="opt"><input type="radio" name="q34" value="2"><span class="let">в</span><span>Любой: результат одинаковый</span></label><label class="opt"><input type="radio" name="q34" value="3"><span class="let">г</span><span>Рамка не нужна, только щелчки</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="35"><div class="qh"><span class="qn">35</span><span class="qt">Тест</span></div><p class="qq">В рамку целиком попал замкнутый прямоугольник. Что сделает растягивание?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q35" value="0"><span class="let">а</span><span>Растянет одну сторону</span></label><label class="opt"><input type="radio" name="q35" value="1"><span class="let">б</span><span>Просто переместит прямоугольник</span></label><label class="opt"><input type="radio" name="q35" value="2"><span class="let">в</span><span>Удалит его</span></label><label class="opt"><input type="radio" name="q35" value="3"><span class="let">г</span><span>Разобьёт на отрезки</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="36"><div class="qh"><span class="qn">36</span><span class="qt">Впишите ответ</span></div><p class="qq">Как называется команда, которая сдвигает только те концы объектов, что попали в секущую рамку?</p>
+<input class="wr" type="text" name="q36" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">3.7</span>Обрезка, удлинение</h3>
+<article class="q" data-n="37"><div class="qh"><span class="qn">37</span><span class="qt">Тест</span></div><p class="qq">Что делает команда «Обрезка»?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q37" value="0"><span class="let">а</span><span>Убирает часть объекта до пересечения с другим объектом</span></label><label class="opt"><input type="radio" name="q37" value="1"><span class="let">б</span><span>Достраивает объект до границы</span></label><label class="opt"><input type="radio" name="q37" value="2"><span class="let">в</span><span>Делит объект пополам</span></label><label class="opt"><input type="radio" name="q37" value="3"><span class="let">г</span><span>Строит параллельную копию</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="38"><div class="qh"><span class="qn">38</span><span class="qt">Тест</span></div><p class="qq">Где на ленте находится команда «Удлинение»?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q38" value="0"><span class="let">а</span><span>В выпадающем списке рядом с кнопкой «Обрезка»</span></label><label class="opt"><input type="radio" name="q38" value="1"><span class="let">б</span><span>На панели «Слои»</span></label><label class="opt"><input type="radio" name="q38" value="2"><span class="let">в</span><span>В строке состояния</span></label><label class="opt"><input type="radio" name="q38" value="3"><span class="let">г</span><span>На вкладке «Вид»</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="39"><div class="qh"><span class="qn">39</span><span class="qt">Впишите ответ</span></div><p class="qq">Как называется команда, которая достраивает отрезок до ближайшей границы?</p>
+<input class="wr" type="text" name="q39" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">3.8</span>Подобие</h3>
+<article class="q" data-n="40"><div class="qh"><span class="qn">40</span><span class="qt">Впишите ответ</span></div><p class="qq">Напишите английское имя команды «Подобие».</p>
+<input class="wr" type="text" name="q40" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<article class="q" data-n="41"><div class="qh"><span class="qn">41</span><span class="qt">Сопоставление</span></div><p class="qq">На рисунке запрос команды «Подобие». Сопоставьте параметр и его действие.</p>
+<figure><img src="Изображения/10 Запрос команды Подобие.jpg" alt="Иллюстрация к заданию 41" loading="lazy"></figure>
+<ol class="right"><li><span class="let">А</span>Выбирает, в каком слое окажется новый объект</li><li><span class="let">Б</span>Подобный объект строится через указанную точку</li><li><span class="let">В</span>После построения исходный объект удаляется</li></ol>
+<div class="pairs"><label class="pair"><span class="ln">1</span><span class="lt">Через</span><select name="q41_0"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option></select></label><label class="pair"><span class="ln">2</span><span class="lt">Удалить</span><select name="q41_1"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option></select></label><label class="pair"><span class="ln">3</span><span class="lt">Слой</span><select name="q41_2"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option></select></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="42"><div class="qh"><span class="qn">42</span><span class="qt">Тест</span></div><p class="qq">Исходный отрезок лежит в слое Defpoints, текущий слой — 0, параметр «Слой» = «Текущий». Где окажется подобный отрезок?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q42" value="0"><span class="let">а</span><span>В слое Defpoints</span></label><label class="opt"><input type="radio" name="q42" value="1"><span class="let">б</span><span>В слое 0</span></label><label class="opt"><input type="radio" name="q42" value="2"><span class="let">в</span><span>В новом слое</span></label><label class="opt"><input type="radio" name="q42" value="3"><span class="let">г</span><span>Программа спросит при каждом построении</span></label></div>
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">3.9</span>Создание массивов</h3>
+<article class="q" data-n="43"><div class="qh"><span class="qn">43</span><span class="qt">Тест</span></div><p class="qq">Какой из этих видов массивов в курсе не рассматривается, потому что мы работаем в 2D?</p>
+<figure><img src="Изображения/11 Виды массивов.jpg" alt="Иллюстрация к заданию 43" loading="lazy"></figure>
+<div class="opts"><label class="opt"><input type="radio" name="q43" value="0"><span class="let">а</span><span>Прямоугольный массив</span></label><label class="opt"><input type="radio" name="q43" value="1"><span class="let">б</span><span>Круговой массив</span></label><label class="opt"><input type="radio" name="q43" value="2"><span class="let">в</span><span>Массив по траектории</span></label><label class="opt"><input type="radio" name="q43" value="3"><span class="let">г</span><span>3D-массив</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="44"><div class="qh"><span class="qn">44</span><span class="qt">Тест</span></div><p class="qq">Что нужно задать для кругового массива?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q44" value="0"><span class="let">а</span><span>Центральную точку и угол между элементами</span></label><label class="opt"><input type="radio" name="q44" value="1"><span class="let">б</span><span>Число рядов и столбцов</span></label><label class="opt"><input type="radio" name="q44" value="2"><span class="let">в</span><span>Траекторию</span></label><label class="opt"><input type="radio" name="q44" value="3"><span class="let">г</span><span>Только количество элементов</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="45"><div class="qh"><span class="qn">45</span><span class="qt">Впишите ответ</span></div><p class="qq">Какой командой ассоциативный массив разбивают на отдельные объекты?</p>
+<input class="wr" type="text" name="q45" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+</section>
+<section id="r3"><h2 class="sec">Раздел 4. Настройка видимости и отображения объектов</h2>
+<h3 class="les"><span class="num">4.1</span>Порядок следования объектов</h3>
+<article class="q" data-n="46"><div class="qh"><span class="qn">46</span><span class="qt">Тест</span></div><p class="qq">Два объекта наложены друг на друга. Какой из них виден по умолчанию?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q46" value="0"><span class="let">а</span><span>Созданный первым</span></label><label class="opt"><input type="radio" name="q46" value="1"><span class="let">б</span><span>Созданный последним</span></label><label class="opt"><input type="radio" name="q46" value="2"><span class="let">в</span><span>Тот, у которого цвет ярче</span></label><label class="opt"><input type="radio" name="q46" value="3"><span class="let">г</span><span>Тот, что лежит в слое 0</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="47"><div class="qh"><span class="qn">47</span><span class="qt">Тест</span></div><p class="qq">Выбран подсвеченный подпункт. Что произойдёт с объектом?</p>
+<figure><img src="Изображения/12 Подпункты порядка следования.jpg" alt="Иллюстрация к заданию 47" loading="lazy"></figure>
+<div class="opts"><label class="opt"><input type="radio" name="q47" value="0"><span class="let">а</span><span>Он будет отображаться поверх остальных</span></label><label class="opt"><input type="radio" name="q47" value="1"><span class="let">б</span><span>Он уйдёт под остальные объекты</span></label><label class="opt"><input type="radio" name="q47" value="2"><span class="let">в</span><span>Он будет скрыт</span></label><label class="opt"><input type="radio" name="q47" value="3"><span class="let">г</span><span>Он переместится в другой слой</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="48"><div class="qh"><span class="qn">48</span><span class="qt">Впишите ответ</span></div><p class="qq">Как называется пункт контекстного меню, в котором находятся «На передний план» и «На задний план»?</p>
+<input class="wr" type="text" name="q48" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">4.2</span>Свойства объектов. Панель «Свойства»</h3>
+<article class="q" data-n="49"><div class="qh"><span class="qn">49</span><span class="qt">Сопоставление</span></div><p class="qq">Сопоставьте кнопку панели «Свойства» и её действие.</p>
+<ol class="right"><li><span class="let">А</span>Выделяет объекты, похожие на выбранный</li><li><span class="let">Б</span>Каждый щелчок добавляет объект к уже выбранным</li><li><span class="let">В</span>Открывает окно отбора по типу и свойствам</li><li><span class="let">Г</span>Выделяет невыбранные объекты, а выбранные снимает</li></ol>
+<div class="pairs"><label class="pair"><span class="ln">1</span><span class="lt">Добавление в выбор</span><select name="q49_0"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option><option value="3">Г</option></select></label><label class="pair"><span class="ln">2</span><span class="lt">Инвертировать выбор</span><select name="q49_1"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option><option value="3">Г</option></select></label><label class="pair"><span class="ln">3</span><span class="lt">Выбрать похожие объекты</span><select name="q49_2"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option><option value="3">Г</option></select></label><label class="pair"><span class="ln">4</span><span class="lt">Быстрый выбор</span><select name="q49_3"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option><option value="3">Г</option></select></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="50"><div class="qh"><span class="qn">50</span><span class="qt">Тест</span></div><p class="qq">Ничего не выделено, на панели «Свойства» цвет поменяли на красный. Что будет дальше?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q50" value="0"><span class="let">а</span><span>Покраснеют все объекты чертежа</span></label><label class="opt"><input type="radio" name="q50" value="1"><span class="let">б</span><span>Все новые объекты будут строиться красными</span></label><label class="opt"><input type="radio" name="q50" value="2"><span class="let">в</span><span>Цвет слоя станет красным</span></label><label class="opt"><input type="radio" name="q50" value="3"><span class="let">г</span><span>Ничего не изменится</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="51"><div class="qh"><span class="qn">51</span><span class="qt">Впишите ответ</span></div><p class="qq">Какое значение цвета нужно вернуть на панели «Свойства», чтобы цвет снова брался из слоя?</p>
+<input class="wr" type="text" name="q51" autocomplete="off" placeholder="Ваш ответ">
+<p class="fb" hidden></p></article>
+<h3 class="les"><span class="num">4.3</span>Изоляция объектов</h3>
+<article class="q" data-n="52"><div class="qh"><span class="qn">52</span><span class="qt">Сопоставление</span></div><p class="qq">Сопоставьте команду из пункта «Изолировать» и результат.</p>
+<ol class="right"><li><span class="let">А</span>Скрытые объекты снова появляются на экране</li><li><span class="let">Б</span>На экране остаются только выделенные объекты</li><li><span class="let">В</span>Выделенные объекты пропадают, остальные остаются</li></ol>
+<div class="pairs"><label class="pair"><span class="ln">1</span><span class="lt">Изолировать объекты</span><select name="q52_0"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option></select></label><label class="pair"><span class="ln">2</span><span class="lt">Скрыть объекты</span><select name="q52_1"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option></select></label><label class="pair"><span class="ln">3</span><span class="lt">Завершить изоляцию объектов</span><select name="q52_2"><option value="">—</option><option value="0">А</option><option value="1">Б</option><option value="2">В</option></select></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="53"><div class="qh"><span class="qn">53</span><span class="qt">Тест</span></div><p class="qq">Выбран подсвеченный пункт меню. Что произойдёт?</p>
+<figure><img src="Изображения/13 Подпункты изоляции.jpg" alt="Иллюстрация к заданию 53" loading="lazy"></figure>
+<div class="opts"><label class="opt"><input type="radio" name="q53" value="0"><span class="let">а</span><span>Выделенный объект удалится</span></label><label class="opt"><input type="radio" name="q53" value="1"><span class="let">б</span><span>Скрытые объекты снова отобразятся</span></label><label class="opt"><input type="radio" name="q53" value="2"><span class="let">в</span><span>Останется только выделенный объект</span></label><label class="opt"><input type="radio" name="q53" value="3"><span class="let">г</span><span>Объект перейдёт на передний план</span></label></div>
+<p class="fb" hidden></p></article>
+<article class="q" data-n="54"><div class="qh"><span class="qn">54</span><span class="qt">Тест</span></div><p class="qq">Удаляет ли изоляция скрытые объекты из чертежа?</p>
+<div class="opts"><label class="opt"><input type="radio" name="q54" value="0"><span class="let">а</span><span>Да, безвозвратно</span></label><label class="opt"><input type="radio" name="q54" value="1"><span class="let">б</span><span>Да, но их можно вернуть через Ctrl+Z</span></label><label class="opt"><input type="radio" name="q54" value="2"><span class="let">в</span><span>Нет, объекты только временно убираются с экрана</span></label><label class="opt"><input type="radio" name="q54" value="3"><span class="let">г</span><span>Удаляет только объекты других слоёв</span></label></div>
+<p class="fb" hidden></p></article>
+</section>
+<div class="bar"><button id="check" type="button">Проверить</button><button id="reset" type="button" class="ghost">Начать заново</button><span id="score" aria-live="polite"></span></div>
+</div><script>
+const KEY={"1":{"t":"c","a":1,"show":"б) Все объекты, которые рамка задевает хотя бы краем"},"2":{"t":"m","a":[1,0],"show":"1 — Б, 2 — А"},"3":{"t":"w","a":["Esc","Escape","Эскейп"],"show":"Esc"},"4":{"t":"w","a":["QS","QSELECT","БВЫБОР"],"show":"QS, QSELECT или БВЫБОР"},"5":{"t":"c","a":1,"show":"б) Выделятся все отрезки чертежа"},"6":{"t":"c","a":2,"show":"в) Только те типы, которые уже есть в чертеже"},"7":{"t":"c","a":0,"show":"а) Вкладка «Главная», панель «Группа»"},"8":{"t":"c","a":1,"show":"б) Только этот элемент"},"9":{"t":"c","a":1,"show":"б) «Новая»"},"10":{"t":"c","a":0,"show":"а) Выделятся все объекты того же типа и с теми же свойствами"},"11":{"t":"c","a":0,"show":"а) На панели «Свойства»"},"12":{"t":"w","a":["Выбрать похожие объекты","Выбрать похожие","Выбор похожих объектов","SELECTSIMILAR"],"show":"«Выбрать похожие объекты»"},"13":{"t":"w","a":["Ctrl+Alt+H","Ctrl Alt H","Ctrl-Alt-H"],"show":"Ctrl+Alt+H"},"14":{"t":"m","a":[2,3,0,1],"show":"1 — В, 2 — Г, 3 — А, 4 — Б"},"15":{"t":"c","a":2,"show":"в) Конический"},"16":{"t":"c","a":1,"show":"б) Останется прежней, не следуя за контуром"},"17":{"t":"w","a":["Восстановить контур"],"show":"«Восстановить контур»"},"18":{"t":"c","a":0,"show":"а) Кнопку «ШТРИХОВКА» в строке состояния"},"19":{"t":"w","a":["Ctrl+D","Ctrl D","Ctrl-D"],"show":"Ctrl+D"},"20":{"t":"c","a":1,"show":"б) Базовую точку"},"21":{"t":"c","a":1,"show":"б) Шаг выбора пропускается, и программа сразу спрашивает базовую точку"},"22":{"t":"w","a":["Ctrl+Shift+D","Ctrl Shift D","Ctrl-Shift-D"],"show":"Ctrl+Shift+D"},"23":{"t":"c","a":0,"show":"а) Исходные объекты остаются на месте"},"24":{"t":"c","a":1,"show":"б) Нажать Esc"},"25":{"t":"w","a":["Ctrl+E","Ctrl E","Ctrl-E"],"show":"Ctrl+E"},"26":{"t":"c","a":0,"show":"а) Это центр вращения"},"27":{"t":"c","a":1,"show":"б) Вписать число в динамическом вводе"},"28":{"t":"c","a":1,"show":"б) Только зеркальная копия"},"29":{"t":"c","a":2,"show":"в) Двумя точками, в любом направлении"},"30":{"t":"w","a":["Зеркало","Зеркальная копия","MIRROR"],"show":"«Зеркало»"},"31":{"t":"c","a":1,"show":"б) Уменьшился в два раза"},"32":{"t":"m","a":[1,2,0],"show":"1 — Б, 2 — В, 3 — А"},"33":{"t":"c","a":2,"show":"в) Базовая точка"},"34":{"t":"c","a":1,"show":"б) Зелёной секущей, справа налево"},"35":{"t":"c","a":1,"show":"б) Просто переместит прямоугольник"},"36":{"t":"w","a":["Растянуть","Растягивание","STRETCH"],"show":"«Растянуть» (растягивание)"},"37":{"t":"c","a":0,"show":"а) Убирает часть объекта до пересечения с другим объектом"},"38":{"t":"c","a":0,"show":"а) В выпадающем списке рядом с кнопкой «Обрезка»"},"39":{"t":"w","a":["Удлинение","Удлинить","EXTEND"],"show":"«Удлинение»"},"40":{"t":"w","a":["OFFSET"],"show":"OFFSET (русские варианты: О, ПОД, ПОДОБИЕ)"},"41":{"t":"m","a":[1,2,0],"show":"1 — Б, 2 — В, 3 — А"},"42":{"t":"c","a":1,"show":"б) В слое 0"},"43":{"t":"c","a":3,"show":"г) 3D-массив"},"44":{"t":"c","a":0,"show":"а) Центральную точку и угол между элементами"},"45":{"t":"w","a":["Разбивка","Разбить","Расчленить","EXPLODE"],"show":"«Разбивка» (разбить)"},"46":{"t":"c","a":1,"show":"б) Созданный последним"},"47":{"t":"c","a":0,"show":"а) Он будет отображаться поверх остальных"},"48":{"t":"w","a":["Порядок следования"],"show":"«Порядок следования»"},"49":{"t":"m","a":[1,3,0,2],"show":"1 — Б, 2 — Г, 3 — А, 4 — В"},"50":{"t":"c","a":1,"show":"б) Все новые объекты будут строиться красными"},"51":{"t":"w","a":["По слою","ByLayer","Послою"],"show":"«По слою»"},"52":{"t":"m","a":[1,2,0],"show":"1 — Б, 2 — В, 3 — А"},"53":{"t":"c","a":1,"show":"б) Скрытые объекты снова отобразятся"},"54":{"t":"c","a":2,"show":"в) Нет, объекты только временно убираются с экрана"}};
+const norm=s=>s.toLowerCase().replace(/ё/g,'е').replace(/[«»"'.]/g,'').replace(/[\s+\-]+/g,'');
+document.getElementById('check').onclick=()=>{let ok=0,tot=0;
+ document.querySelectorAll('.q').forEach(q=>{const n=q.dataset.n,k=KEY[n];tot++;let good=false,empty=false;
+  if(k.t==='c'){const v=q.querySelector('input:checked');empty=!v;good=v&&+v.value===k.a;}
+  else if(k.t==='w'){const v=q.querySelector('.wr').value;empty=!v.trim();good=k.a.some(a=>norm(a)===norm(v));}
+  else{const s=[...q.querySelectorAll('select')];empty=s.some(x=>x.value==='');good=s.every((x,i)=>x.value!==''&&+x.value===k.a[i]);}
+  q.classList.remove('good','bad');q.classList.add(good?'good':'bad');if(good)ok++;
+  const fb=q.querySelector('.fb');fb.hidden=false;fb.textContent=good?'Верно.':(empty?'Нет ответа. ':'Неверно. ')+(good?'':'Правильный ответ: '+k.show);});
+ document.getElementById('score').textContent='Верно: '+ok+' из '+tot;};
+document.getElementById('reset').onclick=()=>{document.querySelectorAll('input[type=radio]').forEach(x=>x.checked=false);
+ document.querySelectorAll('.wr').forEach(x=>x.value='');document.querySelectorAll('select').forEach(x=>x.value='');
+ document.querySelectorAll('.q').forEach(q=>{q.classList.remove('good','bad');q.querySelector('.fb').hidden=true});document.getElementById('score').textContent='';window.scrollTo(0,0)};
+</script></body></html>
