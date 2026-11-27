@@ -100,7 +100,7 @@ button{font:600 15px/1 var(--f-body);background:var(--accent);color:#fff;border:
 button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 #score{font:600 15px/1 var(--f-mono)}
 </style></head><body><div class="wrap">
-<header><div class="eyebrow">Блок 2 · Задание для закрепления</div><h1>Проверьте себя по второму блоку</h1>
+<header><div class="eyebrow">Модуль 2 · Задание для закрепления</div><h1>Проверьте себя по второму блоку</h1>
 <p class="lead">По три задания на каждый урок: тесты, сопоставления и вопросы, где нужно вписать название команды. Программа не нужна. Выполните задание и нажмите «Проверить» — верные ответы подсветятся.</p>
 <div class="meta"><span class="chip">54 заданий</span><span class="chip">18 уроков</span><span class="chip">4 раздела</span></div></header>
 <nav class="toc"><h2>Разделы</h2><ol><li><a href="#r0">Выбор объектов в nanoCAD</a></li><li><a href="#r1">Штриховки и градиенты</a></li><li><a href="#r2">Редактирование объектов nanoCAD</a></li><li><a href="#r3">Настройка видимости и отображения объектов</a></li></ol></nav>
@@ -314,15 +314,39 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
 </div><script>
 const KEY={"1":{"t":"c","a":1,"show":"б) Все объекты, которые рамка задевает хотя бы краем"},"2":{"t":"m","a":[1,0],"show":"1 — Б, 2 — А"},"3":{"t":"w","a":["Esc","Escape","Эскейп"],"show":"Esc"},"4":{"t":"w","a":["QS","QSELECT","БВЫБОР"],"show":"QS, QSELECT или БВЫБОР"},"5":{"t":"c","a":1,"show":"б) Выделятся все отрезки чертежа"},"6":{"t":"c","a":2,"show":"в) Только те типы, которые уже есть в чертеже"},"7":{"t":"c","a":0,"show":"а) Вкладка «Главная», панель «Группа»"},"8":{"t":"c","a":1,"show":"б) Только этот элемент"},"9":{"t":"c","a":1,"show":"б) «Новая»"},"10":{"t":"c","a":0,"show":"а) Выделятся все объекты того же типа и с теми же свойствами"},"11":{"t":"c","a":0,"show":"а) На панели «Свойства»"},"12":{"t":"w","a":["Выбрать похожие объекты","Выбрать похожие","Выбор похожих объектов","SELECTSIMILAR"],"show":"«Выбрать похожие объекты»"},"13":{"t":"w","a":["Ctrl+Alt+H","Ctrl Alt H","Ctrl-Alt-H"],"show":"Ctrl+Alt+H"},"14":{"t":"m","a":[2,3,0,1],"show":"1 — В, 2 — Г, 3 — А, 4 — Б"},"15":{"t":"c","a":2,"show":"в) Конический"},"16":{"t":"c","a":1,"show":"б) Останется прежней, не следуя за контуром"},"17":{"t":"w","a":["Восстановить контур"],"show":"«Восстановить контур»"},"18":{"t":"c","a":0,"show":"а) Кнопку «ШТРИХОВКА» в строке состояния"},"19":{"t":"w","a":["Ctrl+D","Ctrl D","Ctrl-D"],"show":"Ctrl+D"},"20":{"t":"c","a":1,"show":"б) Базовую точку"},"21":{"t":"c","a":1,"show":"б) Шаг выбора пропускается, и программа сразу спрашивает базовую точку"},"22":{"t":"w","a":["Ctrl+Shift+D","Ctrl Shift D","Ctrl-Shift-D"],"show":"Ctrl+Shift+D"},"23":{"t":"c","a":0,"show":"а) Исходные объекты остаются на месте"},"24":{"t":"c","a":1,"show":"б) Нажать Esc"},"25":{"t":"w","a":["Ctrl+E","Ctrl E","Ctrl-E"],"show":"Ctrl+E"},"26":{"t":"c","a":0,"show":"а) Это центр вращения"},"27":{"t":"c","a":1,"show":"б) Вписать число в динамическом вводе"},"28":{"t":"c","a":1,"show":"б) Только зеркальная копия"},"29":{"t":"c","a":2,"show":"в) Двумя точками, в любом направлении"},"30":{"t":"w","a":["Зеркало","Зеркальная копия","MIRROR"],"show":"«Зеркало»"},"31":{"t":"c","a":1,"show":"б) Уменьшился в два раза"},"32":{"t":"m","a":[1,2,0],"show":"1 — Б, 2 — В, 3 — А"},"33":{"t":"c","a":2,"show":"в) Базовая точка"},"34":{"t":"c","a":1,"show":"б) Зелёной секущей, справа налево"},"35":{"t":"c","a":1,"show":"б) Просто переместит прямоугольник"},"36":{"t":"w","a":["Растянуть","Растягивание","STRETCH"],"show":"«Растянуть» (растягивание)"},"37":{"t":"c","a":0,"show":"а) Убирает часть объекта до пересечения с другим объектом"},"38":{"t":"c","a":0,"show":"а) В выпадающем списке рядом с кнопкой «Обрезка»"},"39":{"t":"w","a":["Удлинение","Удлинить","EXTEND"],"show":"«Удлинение»"},"40":{"t":"w","a":["OFFSET"],"show":"OFFSET (русские варианты: О, ПОД, ПОДОБИЕ)"},"41":{"t":"m","a":[1,2,0],"show":"1 — Б, 2 — В, 3 — А"},"42":{"t":"c","a":1,"show":"б) В слое 0"},"43":{"t":"c","a":3,"show":"г) 3D-массив"},"44":{"t":"c","a":0,"show":"а) Центральную точку и угол между элементами"},"45":{"t":"w","a":["Разбивка","Разбить","Расчленить","EXPLODE"],"show":"«Разбивка» (разбить)"},"46":{"t":"c","a":1,"show":"б) Созданный последним"},"47":{"t":"c","a":0,"show":"а) Он будет отображаться поверх остальных"},"48":{"t":"w","a":["Порядок следования"],"show":"«Порядок следования»"},"49":{"t":"m","a":[1,3,0,2],"show":"1 — Б, 2 — Г, 3 — А, 4 — В"},"50":{"t":"c","a":1,"show":"б) Все новые объекты будут строиться красными"},"51":{"t":"w","a":["По слою","ByLayer","Послою"],"show":"«По слою»"},"52":{"t":"m","a":[1,2,0],"show":"1 — Б, 2 — В, 3 — А"},"53":{"t":"c","a":1,"show":"б) Скрытые объекты снова отобразятся"},"54":{"t":"c","a":2,"show":"в) Нет, объекты только временно убираются с экрана"}};
 const norm=s=>s.toLowerCase().replace(/ё/g,'е').replace(/[«»"'.]/g,'').replace(/[\s+\-]+/g,'');
-document.getElementById('check').onclick=()=>{let ok=0,tot=0;
- document.querySelectorAll('.q').forEach(q=>{const n=q.dataset.n,k=KEY[n];tot++;let good=false,empty=false;
-  if(k.t==='c'){const v=q.querySelector('input:checked');empty=!v;good=v&&+v.value===k.a;}
-  else if(k.t==='w'){const v=q.querySelector('.wr').value;empty=!v.trim();good=k.a.some(a=>norm(a)===norm(v));}
-  else{const s=[...q.querySelectorAll('select')];empty=s.some(x=>x.value==='');good=s.every((x,i)=>x.value!==''&&+x.value===k.a[i]);}
-  q.classList.remove('good','bad');q.classList.add(good?'good':'bad');if(good)ok++;
-  const fb=q.querySelector('.fb');fb.hidden=false;fb.textContent=good?'Верно.':(empty?'Нет ответа. ':'Неверно. ')+(good?'':'Правильный ответ: '+k.show);});
- document.getElementById('score').textContent='Верно: '+ok+' из '+tot;};
-document.getElementById('reset').onclick=()=>{document.querySelectorAll('input[type=radio]').forEach(x=>x.checked=false);
+const STORE_KEY = 'nanocad_quiz_' + location.pathname;
+
+function saveProgress() {
+  try {
+    const data = {};
+    document.querySelectorAll('input[type=radio]:checked').forEach(el => { data[el.name] = el.value; });
+    document.querySelectorAll('select, .wr').forEach(el => { if (el.value) data[el.name] = el.value; });
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    const scoreEl = document.getElementById('score');
+    if (!scoreEl.textContent.startsWith('Верно:')) scoreEl.textContent = 'Прогресс сохранён';
+  } catch (e) {}
+}
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    Object.entries(data).forEach(([name, val]) => {
+      const radio = document.querySelector(`input[type=radio][name="${name}"][value="${val}"]`);
+      if (radio) { radio.checked = true; return; }
+      const field = document.querySelector(`[name="${name}"]`);
+      if (field) field.value = val;
+    });
+    document.getElementById('score').textContent = 'Восстановлен сохранённый прогресс';
+  } catch (e) {}
+}
+
+document.querySelector('.wrap').addEventListener('input', saveProgress);
+document.querySelector('.wrap').addEventListener('change', saveProgress);
+loadProgress();
+
+document.getElementById('reset').onclick=()=>{try{localStorage.removeItem(STORE_KEY)}catch(e){}document.querySelectorAll('input[type=radio]').forEach(x=>x.checked=false);
  document.querySelectorAll('.wr').forEach(x=>x.value='');document.querySelectorAll('select').forEach(x=>x.value='');
  document.querySelectorAll('.q').forEach(q=>{q.classList.remove('good','bad');q.querySelector('.fb').hidden=true});document.getElementById('score').textContent='';window.scrollTo(0,0)};
 </script></body></html>
